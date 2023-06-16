@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:element name="ZFM_WEB_ORDER_MAT_AVAIL_WRAP">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="import">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="I_MAT_DETAILS">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="row" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="MATNR" type="xs:string"/>
+                          <xs:element name="QUANTITY" type="xs:string"/>
+                          <xs:element name="UOM" type="xs:string"/>
+                          <xs:element name="LOOSE_ENDS" type="xs:string" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:integer" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="I_SHIP_TO_PARTY" type="xs:string"/>
+              <xs:element name="I_SHIP_TO_REGION" type="xs:string"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="export">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="E_RESULTS">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="row">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="OPTION_NUMBER" type="xs:integer"/>
+                          <xs:element name="DEFAULT_PLANT" type="xs:string"/>
+                          <xs:element name="MESSAGE" type="xs:string"/>
+                          <xs:element name="OPTION_NUM" type="xs:integer"/>
+                          <xs:element name="PLANT" type="xs:string"/>
+                          <xs:element name="MATNR" type="xs:string"/>
+                          <xs:element name="AVAILABLE_QTY" type="xs:string"/>
+                          <xs:element name="UOM" type="xs:string"/>
+                          <xs:element name="TEXT" type="xs:string"/>
+                          <xs:element name="ESTIMATED_SHIPING_DATE" type="xs:string"/>
+                          <xs:element name="CALENDAR_SHIPING_DATE" type="xs:string"/>
+                          <xs:element name="ESTIMATED_SHIPING_DATE_END" type="xs:string"/>
+                          <xs:element name="ESTIMATED_SHIPING_VALID_DATES" type="xs:string"/>
+                          <xs:element name="AVAILABLE_MESSAGE" type="xs:string"/>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:integer" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

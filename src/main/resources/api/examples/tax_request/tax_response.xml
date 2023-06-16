@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ZWEB_TAX_REQUEST>
+    <import>
+        <I_GUEST_COUNTRY>US</I_GUEST_COUNTRY>
+        <I_GUEST_REGION>AZ</I_GUEST_REGION>
+        <I_SH_NBR>0000032123</I_SH_NBR>
+    </import>
+    <export>
+        <E_FREIGHT_TAXRATE>0.000</E_FREIGHT_TAXRATE>
+        <E_MATERIAL_TAXRATE>0.000</E_MATERIAL_TAXRATE>
+        <E_SERVICE_TAXRATE>0.000</E_SERVICE_TAXRATE>
+    </export>
+</ZWEB_TAX_REQUEST>

@@ -1,0 +1,96 @@
+#%RAML 1.0
+title: iewc-sap-sapi
+description: This is an System API which is exposed to external system SAP and is invoked by process api for all the resources.        
+version: v1
+protocols: [HTTPS,HTTP] 
+mediaType: [application/xml]
+
+resourceTypes:
+  healthCheck: !include /exchange_modules/45fe9fe3-71e9-4c7f-99b4-aade424656d9/healthcheck/1.0.0/healthcheck.raml
+
+types:
+  tax_request: !include /dataTypes/tax_request/tax_request.raml
+  tax_response: !include /dataTypes/tax_request/tax_response.raml
+  web_order_request: !include /dataTypes/web_order/web_order_request.raml
+  web_order_response: !include /dataTypes/web_order/web_order_response.raml
+  price_harm_request: !include /dataTypes/price_harm/price_harm_request.raml
+  price_harm_response: !include /dataTypes/price_harm/price_harm_response.raml
+  salesdoc_output_request: !include /dataTypes/salesdoc_output/salesdoc_output_request.raml
+  salesdoc_output_response: !include /dataTypes/salesdoc_output/salesdoc_output_response.raml
+  error-response: !include /exchange_modules/45fe9fe3-71e9-4c7f-99b4-aade424656d9/common-fragment/1.0.3/errorFiles/error-dataType.raml
+  
+/health:
+  type: healthCheck
+  
+/tax_request:
+   post:
+    body:
+      application/xml:
+        type: tax_request
+        example: !include /examples/tax_request/tax_request.xml
+    responses:
+      200:
+        body:
+          application/xml:
+            type: tax_response
+            example: !include /examples/tax_request/tax_response.xml
+      401:
+        body:
+          application/json:
+            type: error-response
+            example: !include /exchange_modules/45fe9fe3-71e9-4c7f-99b4-aade424656d9/common-fragment/1.0.3/errorFiles/401error-example.json
+
+/web_order:
+   post:
+    body:
+      application/xml:
+        type: web_order_request
+        example: !include /examples/web_order/web_order_request.xml
+    responses:
+      200:
+        body:
+          application/xml:
+            type: web_order_response
+            example: !include /examples/web_order/web_order_response.xml
+      401:
+        body:
+          application/json:
+            type: error-response
+            example: !include /exchange_modules/45fe9fe3-71e9-4c7f-99b4-aade424656d9/common-fragment/1.0.3/errorFiles/401error-example.json
+
+/price_harm:
+   post:
+    body:
+      application/xml:
+          type: price_harm_request
+          example: !include /examples/price_harm/price_harm_request.xml
+    responses:
+      200:
+        body:
+          application/xml:
+            type: price_harm_response
+            example: !include /examples/price_harm/price_harm_response.xml
+      401:
+        body:
+          application/json:
+            type: error-response
+            example: !include /exchange_modules/45fe9fe3-71e9-4c7f-99b4-aade424656d9/common-fragment/1.0.3/errorFiles/401error-example.json
+
+/salesdoc_output:
+  post:
+    body:
+      application/xml:
+        type: salesdoc_output_request
+        example: !include /examples/salesdoc_output/salesdoc_output_request.xml
+    responses:
+      200:
+        body:
+          application/xml:
+            type: salesdoc_output_response
+            example: !include /examples/salesdoc_output/salesdoc_output_response.xml
+      401:
+        body:
+          application/json:
+            type: error-response
+            example: !include /exchange_modules/45fe9fe3-71e9-4c7f-99b4-aade424656d9/common-fragment/1.0.3/errorFiles/401error-example.json
+    

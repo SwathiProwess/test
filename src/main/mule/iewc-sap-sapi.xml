@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <apikit:config name="iewc-sap-sapi-config" api="iewc-sap-sapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="iewc-sap-sapi-main">
+        <http:listener config-ref="http-listener-config" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <ee:transform doc:name="intialisationOfVariables" doc:id="a82de0f3-98f5-49c9-b608-c929df51fa24">
+            <ee:message />
+            <ee:variables>
+                <ee:set-variable variableName="httpMethod"><![CDATA[attributes.method]]></ee:set-variable>
+                <ee:set-variable variableName="correlationId"><![CDATA[if(!isEmpty(attributes.headers.correlationId)) attributes.headers.correlationId else correlationId]]></ee:set-variable>
+                <ee:set-variable variableName="sourceName"><![CDATA[attributes.headers.sourceName]]></ee:set-variable>
+                <ee:set-variable variableName="functionModule"><![CDATA[attributes.headers.functionModule]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <apikit:router doc:name="APIkit Router" doc:id="cf8523f7-d8a2-4deb-8f66-33e890c624ef" config-ref="iewc-sap-sapi-config" />
+        <error-handler ref="error-handler" />
+    </flow>
+    <flow name="iewc-sap-sapi-console">
+        <http:listener config-ref="http-listener-config" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="iewc-sap-sapi-config" />
+        <error-handler ref="error-handler" />
+    </flow>
+    <flow name="get:\health:iewc-sap-sapi-config">
+        <flow-ref doc:name="callToHealthCheckFlow" doc:id="258df8be-10a8-45b8-b51a-978714aa3a93" name="healthCheckFlow" />
+    </flow>
+    <flow name="post:\price_harm:application\xml:iewc-sap-sapi-config">
+        <flow-ref doc:name="callingPriceHarmImplFlow" doc:id="4ee2fa50-5138-4d3d-b120-74aa0b733f03" name="ImplementationFlow" />
+    </flow>
+    <flow name="post:\tax_request:application\xml:iewc-sap-sapi-config">
+        <flow-ref doc:name="callingTaxRequestImplFlow" doc:id="4ba04d92-b9e0-4c0c-8095-b96281fac227" name="ImplementationFlow" />
+    </flow>
+    <flow name="post:\web_order:application\xml:iewc-sap-sapi-config">
+        <flow-ref doc:name="callingWebOrderImplFlow" doc:id="e8fdd93c-2e17-4d53-b47d-73c86ddfe9b2" name="ImplementationFlow" />
+    </flow>
+	<flow name="post:\salesdoc_output:application\xml:iewc-sap-sapi-config" doc:id="1912a262-8933-4904-b8d0-954766d1e378">
+		<flow-ref doc:name="callingSalesDocImplFlow" doc:id="69699284-7668-4c65-b3eb-3ad55c8a97a9" name="ImplementationFlow"/>
+    </flow>
+</mule>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:sap="http://www.mulesoft.org/schema/mule/sap"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sap http://www.mulesoft.org/schema/mule/sap/current/mule-sap.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="ImplementationFlow" doc:id="063741fb-3f7d-4959-b914-dc627886a590" >
+		<ee:transform doc:name="setInputPayloadVariable" doc:id="82e7b479-cee4-4bb7-b952-8d8fe199e3b7">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="inputPayload" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    correlationId : correlationId,
+    eventTimestamp : now() >> "America/Chicago" as String {format: "yyyy-MM-dd'T'HH:mm:ss.SSS"}, 
+    businessProcessName: app.name,
+    flowName: flow.name,   
+    source: vars.sourceName, 
+    target: p('target'), 
+    httpMethod: vars.httpMethod, 
+    message: p('requestMessage'),
+    businessObject:[]
+   
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="logRequestReceived" doc:id="1929916d-1b45-4902-ac74-93abf83e45a6" name="mile-log:request-received" />
+		<until-successful maxRetries="${maxRetries}" doc:name="Until Successful" doc:id="9f3e0f02-e969-4a1c-8089-c768fc47eb10" millisBetweenRetries="${timeBetweenRetries}">
+			<sap:sync-rfc doc:name="synchronousRFC" doc:id="c274cdfa-ebca-4fbb-9c5c-9412e8985f31" key="#[vars.functionModule]" config-ref="SAP_Config"/>
+		</until-successful>
+		<ee:transform doc:name="setInputPayloadVariable" doc:id="81d37c82-8905-4aac-9337-1638f6393692">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="inputPayload" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    correlationId : correlationId,
+    eventTimestamp : now() >> "America/Chicago" as String {format: "yyyy-MM-dd'T'HH:mm:ss.SSS"}, 
+    businessProcessName: app.name,
+    flowName:flow.name,   
+    source: vars.sourceName, 
+    target: p('target'), 
+    httpMethod: vars.httpMethod, 
+    message: p('responseMessage'),
+    businessObject:[]   
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="logRequestSent" doc:id="fcfcbccd-9f1c-4721-bbb0-5ff3ca0673ea" name="mile-log:request-sent" />
+	</flow>
+</mule>

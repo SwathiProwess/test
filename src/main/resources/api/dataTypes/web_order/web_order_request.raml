@@ -1,0 +1,32 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ZFM_WEB_ORDER_MAT_AVAIL_WRAP">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="import">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="I_SHIP_TO_PARTY" type="xs:string"/>
+              <xs:element name="I_SHIP_TO_REGION" type="xs:string"/>
+              <xs:element name="I_MAT_DETAILS">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="row" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="MATNR" type="xs:string"/>
+                          <xs:element name="QUANTITY" type="xs:decimal"/>
+                          <xs:element name="UOM" type="xs:string"/>
+                          <xs:element name="LOOSE_ENDS" type="xs:string" minOccurs="0"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

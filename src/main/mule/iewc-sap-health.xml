@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sap="http://www.mulesoft.org/schema/mule/sap" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/sap http://www.mulesoft.org/schema/mule/sap/current/mule-sap.xsd">
+	<flow name="healthCheckFlow" doc:id="2637b5e6-c18f-4754-a73b-233e9e28ce18" >
+		<set-variable value='#["processing"]' doc:name="setVariableForHealthCheckOfEndSystem" doc:id="51999c63-5cf6-497c-94c9-65227b308c8f" variableName="EndSystemstatus" />
+		<flow-ref doc:name="callToSetApiEndSystemVariableFlow" doc:id="9c159521-5c37-49f9-baad-22fecc9e23ba" name="setApiEndSystemVariableFlow" />
+		<flow-ref doc:name="callToCheckEndSystemDependencies" doc:id="f88c0b76-089e-4eda-9f6a-79e2072c3f53" name="checkingEndSystemDependencies" />
+		<ee:transform doc:name="finalOutputForHealthCheckflow" doc:id="374886ad-0414-45b8-b999-9d762e191eca" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+apiName: p('application.name'),
+status: vars.apiSystemStatus,
+dependencies: [
+{
+name: "sap endSystem",
+status: vars.EndSystemStatus
+}
+]
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<sub-flow name="setApiEndSystemVariableFlow" doc:id="2941779a-e142-4bae-b88d-f988251c8667" >
+		<set-variable value='#["up"]' doc:name="setVariableForHealthCheckOfApi" doc:id="2c7b1ccd-8076-4d3f-a712-a29ecf7ed8fd" variableName="apiSystemStatus" />
+	</sub-flow>
+	<flow name="checkingEndSystemDependencies" doc:id="57fff0ca-702c-4a1b-b49d-6d223eba050a" >
+		<ee:transform doc:name="sapInput" doc:id="3f25c6ee-d7da-428c-bc25-b560f3fbaf73" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+{
+ZWEB_TAX_REQUEST: {
+"import": {
+I_GUEST_COUNTRY: "US",
+I_GUEST_REGION : "WI",
+I_SH_NBR: ""
+}
+}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<sap:sync-rfc key="ZWEB_TAX_REQUEST" doc:name="synchronousRFC" doc:id="364e1d1f-2147-496d-83f5-037d4fbc084d" config-ref="SAP_Config" />
+		<set-variable value='#["up"]' doc:name="setEndSystemStatus" doc:id="85616481-869c-4f67-aaac-cea13a3495e3" variableName="EndSystemStatus" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="690d3e38-4f74-4d1b-b36c-b1912fc66b2e" type="ANY" >
+				<set-variable value='#["down"]' doc:name="setEndSystemStatus" doc:id="e87bef52-1a80-432d-8baa-13a72ec04ada" variableName="EndSystemStatus" />
+				<logger level="INFO" doc:name="Logger" doc:id="1cd56c3b-5b2d-422b-958a-3539cf980b86" message='#["SAP End System is down"]' />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

@@ -1,0 +1,18 @@
+ 
+
+
+http:
+ listener:
+  host: "0.0.0.0"
+  port: "8081"
+  timeout: "30000"
+  
+sap:
+  username: "s_mule"
+  messageserverhost: "sapr3x01.iewc.com"
+  systemid: "R3X"
+  messageserverport: "3608"
+  messagingservergroupname: "STANDARD"
+  sapsystemnumber: "00"
+  sapclientid: "010"
+

@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="ZFM_CALC_ZILL_TARGET_WRAP">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="import" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="I_KUNNR" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="KUNNR" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="I_MATERIALS" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="MATNR" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:integer"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="export" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="E_RESULTS" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="row" minOccurs="1" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="IEWC_MATERIAL" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                          <xs:element name="PER_AMT" minOccurs="1" maxOccurs="1" type="xs:integer"/>
+                          <xs:element name="PER_UOM" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                          <xs:element name="CURRENCY" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                          <xs:element name="TAR_QTY_START" minOccurs="1" maxOccurs="1" type="xs:decimal"/>
+                          <xs:element name="TAR_QTY_END" minOccurs="1" maxOccurs="1" type="xs:decimal"/>
+                          <xs:element name="TAR_AMT" minOccurs="1" maxOccurs="1" type="xs:decimal"/>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:integer"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

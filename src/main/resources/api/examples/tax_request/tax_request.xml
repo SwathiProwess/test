@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ZWEB_TAX_REQUEST>
+  <import>
+    <I_GUEST_COUNTRY>USA</I_GUEST_COUNTRY>
+    <I_GUEST_REGION>AZ</I_GUEST_REGION>
+    <I_SH_NBR>string</I_SH_NBR>
+  </import>
+</ZWEB_TAX_REQUEST>

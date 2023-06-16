@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="ZFM_PDF_DOC">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="import">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="I_SALES_DOC_REQ">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="SEARCHPARAMS">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="SALESDOCUMENT" type="xs:string"/>
+                          <xs:element name="OUTPUTAPPLICATION" type="xs:string"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="OUTPUT_TYPE">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="CONDITIONTYPE" type="xs:string"/>
+                          <xs:element name="GET_PDF" type="xs:boolean"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="export">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="E_OUTPUT">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="SALESDOCUMENT" type="xs:string"/>
+                    <xs:element name="CONDITIONTYPE" type="xs:string"/>
+                    <xs:element name="KSCHL_TEXT" type="xs:string"/>
+                    <xs:element name="PDF_B64STR" type="xs:string"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="iewc-sap-sapi-test-suite.xml" />
+	<munit:test name="iewc-sap-sapi-test-suite-post:\tax_request:application\xml:iewc-sap-sapi-configTest" doc:id="4e71e942-b77c-4531-b912-1a4e8d038ba0" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="synchronousRFC" doc:id="396f0ccf-eabe-4001-94ae-da39af1e484b" processor="sap:sync-rfc" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="c274cdfa-ebca-4fbb-9c5c-9412e8985f31" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/xml  --- readUrl('classpath://MunitFiles/taxResponsePayload.dwl')]" mediaType="application/xml" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="f0e0a9b0-7867-49fb-95b6-fa7911395c18">
+				<munit:payload value="#[output application/xml  --- readUrl('classpath://MunitFiles/taxRequestPayload.dwl')]" mediaType="application/xml" />
+				<munit:variables >
+					<munit:variable key="correlationId" value='"5675667"' />
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\tax_request:application\xml:iewc-sap-sapi-config" doc:id="edd57b9f-1557-42ff-a807-1fd91ac715b5" name="post:\tax_request:application\xml:iewc-sap-sapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="4f4e6c4f-e16c-45ab-abe8-299b0410bc4b" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/taxResponsePayload.dwl'))]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="iewc-sap-sapi-test-suite-post:\price_harm:application\xml:iewc-sap-sapi-configTest" doc:id="f6679c08-a333-4cc5-a922-446901c10b5f" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="synchronousRFC" doc:id="6cb8749a-510b-4a71-a60a-30927f821e90" processor="sap:sync-rfc">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="c274cdfa-ebca-4fbb-9c5c-9412e8985f31" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/xml  --- readUrl('classpath://MunitFiles/priceHarmResponse.dwl')]" mediaType="application/xml" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="537ff5de-a5d7-487d-94db-7d0e73ae358f" >
+				<munit:payload value="#[output application/xml  --- readUrl('classpath://MunitFiles/priceHarmRequest.dwl')]" mediaType="application/xml" />
+				<munit:variables >
+					<munit:variable key="correlationId" value='"1234"' />
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\price_harm:application\xml:iewc-sap-sapi-config" doc:id="5f95ee7c-c7d0-4a24-aaac-be3b9775530b" name="post:\price_harm:application\xml:iewc-sap-sapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="06089d66-d2d0-4688-be6b-031ab13acbdc" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/priceHarmResponse.dwl'))]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="iewc-sap-sapi-mainTest" doc:id="85513929-9fa3-44af-bc76-61d8e74492df" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apiKitRouter" doc:id="033bd494-0d6f-4f8d-a45a-28c51f27052d" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-sap-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="94ed6758-158f-47b3-9497-ca494bfe5f81" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-sap-sapi-main" doc:id="341be41d-746b-4ded-ac09-6df0c9e707df" name="iewc-sap-sapi-main"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="iewc-sap-sapi-consoleTest" doc:id="dcd322f8-d6da-4e18-a36a-6471b55457c8" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apiKitConsole" doc:id="b50b3b9f-eacb-43c8-bf6a-0bc7e558a8b7" processor="apikit:console">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-sap-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to iewc-sap-sapi-console" doc:id="63228475-d6a5-4091-a909-d760a27b8968" name="iewc-sap-sapi-console"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="APIKIT:UNSUPPORTED_MEDIA_TYPE" doc:id="b8c40c88-73dc-4584-8bd2-54c21ede480e" description="Test" expectedErrorType="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apiKitRouter" doc:id="97610790-63aa-47e1-b0f8-ec631d5837a5" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-sap-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="b714f9f0-71b7-49bf-9ac8-79d0cfc5ccf0" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-sap-sapi-main" doc:id="969e352a-c932-4681-b3b1-fd69678eed40" name="iewc-sap-sapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="51fb7a90-aafe-472a-8f13-6d3e41b4afee" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/unsupportedMediaType.dwl'))]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:NOT_IMPLEMENTED" doc:id="a49efbc9-f3fa-43ae-ac4f-5ee04eed0a13" description="Test" expectedErrorType="APIKIT:NOT_IMPLEMENTED" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apiKitRouter" doc:id="42b73186-a49f-4ba5-a55b-b35c0da7be42" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-sap-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="abc23e77-13c1-4590-b5c0-9b08bfdc1895" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-sap-sapi-main" doc:id="71f328a5-7752-4efd-be6d-f613ae286577" name="iewc-sap-sapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="caa43cdf-d42e-4549-b926-b3f7a2f53170" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/notImplemented.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:NOT_ACCEPTABLE" doc:id="7a3deb1e-22f1-4ed4-b9dc-077574bfa29d" description="Test" expectedErrorType="APIKIT:NOT_ACCEPTABLE" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apiKitRouter" doc:id="e6a2a89f-7aa6-472f-ba72-0a272b2ed502" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-sap-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="0fe29455-6565-4015-9e90-42ea54ad0c9f" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-sap-sapi-main" doc:id="63b2c242-15a4-4ab5-b749-4293fc2997e2" name="iewc-sap-sapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="4b7790b9-e3ab-44e0-8e30-96357f935859" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/notAcceptable.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:BAD_REQUEST" doc:id="c969e08e-22e5-4638-8b57-f26e41856db5" description="Test" expectedErrorType="APIKIT:BAD_REQUEST" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apiKitRouter" doc:id="73e10819-1ce8-4bb5-9fdc-1012e4d932de" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-sap-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="008a8ed1-bbd7-4390-9e32-f57a9bee1e0c" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-sap-sapi-main" doc:id="baea2791-bc70-4ab9-893a-a8a4c44568e1" name="iewc-sap-sapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="5f37253f-4c35-4078-94f4-ef0d5748d30d" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/badRequest.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:NOT_FOUND" doc:id="c2b7e281-1b37-4c7e-a8ab-849f7665e84e" description="Test" expectedErrorType="APIKIT:NOT_FOUND" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apiKitRouter" doc:id="0761469d-582d-4b2c-bd2b-84244d2347da" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-sap-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="83e4c44d-4454-4539-ae70-83c6641069fa" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-sap-sapi-main" doc:id="aade6d77-a798-4fee-b0b3-14c8371c3fc2" name="iewc-sap-sapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="010a564d-5e35-4ad3-beec-796f41528e17" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/notFound.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SAP:CONNECTIVITY" doc:id="21abdc77-293e-402a-8bf5-fcb059dda34d" description="Test" expectedErrorType="SAP:CONNECTIVITY" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apiKitRouter" doc:id="674aec39-e979-478c-9360-45e7fe2b1792" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-sap-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SAP:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="39e10b50-b6a0-48b6-a5f6-1d31ff874fe3" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-sap-sapi-main" doc:id="5116b5e2-dc96-43ad-b28f-d7b12e1f8f63" name="iewc-sap-sapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="2073133e-637b-4c64-b934-cd909a5fc550" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/sapConnectivity.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SAP:INVALID_INPUT" doc:id="a8ff0d9b-3597-4482-873f-0250521562fb" description="Test" expectedErrorType="SAP:INVALID_INPUT" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apiKitRouter" doc:id="d35c7fe7-302e-49b0-b40d-8b1f993efcf8" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-sap-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SAP:INVALID_INPUT" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="360f352e-0936-4e42-84ad-7405e14f26c7" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-sap-sapi-main" doc:id="a65ab4d5-3eb9-4ff0-8ccd-ac06735e630d" name="iewc-sap-sapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="eb6262ad-665a-4711-9d1e-fc540857d34e" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/invalidInput.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="HTTP:CONNECTIVITY" doc:id="1486b32b-a701-4b5d-86c9-596918e66709" description="Test" expectedErrorType="HTTP:CONNECTIVITY" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apiKitRouter" doc:id="6cc21c47-447e-4fd4-b4a1-cefc28691be6" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-sap-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="c3c99478-7770-4a7e-b824-ffca27831450" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-sap-sapi-main" doc:id="ec4e55aa-d176-466b-9e90-27673be9ef18" name="iewc-sap-sapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="4494a8d4-dffd-4cd0-8e79-865c8b32a2be" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/httpConnectivity.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SAP:INVALID_CACHE" doc:id="70c7f440-25c8-496b-a94a-89b809a7e66e" description="Test" expectedErrorType="SAP:INVALID_CACHE" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apiKitRouter" doc:id="3d65a786-8256-44b4-9714-a64a0ac19510" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-sap-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SAP:INVALID_CACHE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="91140a8e-3ab7-4378-a031-8b94cfdb2cf5" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-sap-sapi-main" doc:id="cefa757d-2147-4a6a-baa6-d0c94d65ba53" name="iewc-sap-sapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="f7f0b1de-3659-4fda-b451-766b96551c37" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/sapInvalidCache.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="APIKIT:METHOD_NOT_ALLOWED" doc:id="fae511de-f062-4060-b97f-aa6574e7d203" description="Test" expectedErrorType="APIKIT:METHOD_NOT_ALLOWED" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apiKitRouter" doc:id="8022e8ec-ba82-4533-a573-4b347ca6619b" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="iewc-sap-sapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="8ea13103-5757-4ead-bcc6-1e2e1bed1842" >
+				<munit:variables >
+					<munit:variable key="httpMethod" value='"POST"' />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to iewc-sap-sapi-main" doc:id="60130470-0a79-49a3-87bd-92efa6c88b62" name="iewc-sap-sapi-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="b8e4836f-827d-4f3d-82a0-54f953a60df6" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/methodnotallowed.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="iewc-sap-sapi-test-suite-post:\web_order:application\xml:iewc-sap-sapi-configTest" doc:id="fe02ff14-90cc-42cb-88ce-3246fc3c82b9" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="synchronousRFC" doc:id="d2bb1fea-62b1-4ec4-8c48-ddf300fe76bb" processor="sap:sync-rfc">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="c274cdfa-ebca-4fbb-9c5c-9412e8985f31" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/xml  --- readUrl('classpath://MunitFiles/webOrderResponse.dwl')]" mediaType="application/xml" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="68eb7c4e-abe4-498f-be3d-c22d0103f325" >
+				<munit:payload value="#[output application/xml  --- readUrl('classpath://MunitFiles/webOrderRequest.dwl')]" mediaType="application/xml" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\web_order:application\xml:iewc-sap-sapi-config" doc:id="85c5d7c1-97ff-466a-b8e5-30dc494d1932" name="post:\web_order:application\xml:iewc-sap-sapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="7e52fb14-f32b-4502-a2ad-af326d24221f" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/webOrderResponse.dwl'))]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="iewc-sap-sapi-test-suite-post:\salesdoc_output:application\xml:iewc-sap-sapi-configTest" doc:id="40bfa507-83ef-4929-a031-ef8c245d0381" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="synchronousRFC" doc:id="ffb85856-8b34-4f52-9ae0-9ffe8b32b427" processor="sap:sync-rfc">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="c274cdfa-ebca-4fbb-9c5c-9412e8985f31" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/xml  --- readUrl('classpath://MunitFiles/salesdocResponse.dwl')]" mediaType="application/xml" encoding="UTF-8" />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="b7856062-6235-44e4-80d7-c136fb5aa738" >
+				<munit:payload value="#[output application/xml  --- readUrl('classpath://MunitFiles/salesdocRequest.dwl')]" mediaType="application/xml" />
+
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\salesdoc_output:application\json:iewc-sap-sapi-config" doc:id="68ce37a1-e561-4ce6-b480-cf434f1ac3ea" name="post:\salesdoc_output:application\xml:iewc-sap-sapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="b07a5c9d-5c4e-4c72-9bda-eca9d354d7a6" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/salesdocResponse.dwl'))]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="iewc-sap-sapi-test-suite-get:\health:iewc-sap-sapi-configTest" doc:id="6b718b74-3a7d-4cc5-8259-7efc08a968c8" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="synchronousRFC" doc:id="909415ea-a325-4a97-8f1d-8da32f43b41d" processor="sap:sync-rfc">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="364e1d1f-2147-496d-83f5-037d4fbc084d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://MunitFiles/healthCheckPayload.dwl')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\health:iewc-sap-sapi-config" doc:id="259d1c5b-ee94-4905-a5e6-113e1f65fb70" name="get:\health:iewc-sap-sapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="10c1b0ac-1dc0-4071-9782-418e243d7d58" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/healthCheckPayload.dwl'))]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="healthCheckError" doc:id="59ad4183-86ed-448c-af02-bb323e16785f" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="synchronousRFC" doc:id="427581cb-4322-4bd6-8d4f-5de045dea004" processor="sap:sync-rfc" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="364e1d1f-2147-496d-83f5-037d4fbc084d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://MunitFiles/healthCheckDown.dwl')]" mediaType="application/json" />
+					<munit-tools:error typeId="SAP:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\health:iewc-sap-sapi-config" doc:id="70a1de8f-4d10-429c-9439-78f57363c9fa" name="get:\health:iewc-sap-sapi-config" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="de346c61-84bf-42f0-a077-842c049b740f" expression="#[payload]" is="#[MunitTools::equalTo(readUrl('classpath://MunitFiles/healthCheckDown.dwl'))]" />
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
